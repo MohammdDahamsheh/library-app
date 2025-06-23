@@ -23,18 +23,19 @@ background-color: #0e76a8 ;
 
 .col-image-left {
     background-image: url("./Images/PublicImages/image-4.jpg");
-    height: 25em !important;
+    height: 15em !important;
+
 }
 
 .col-image-right {
     background-image: url("./Images/PublicImages/image-1.jpg");
-    height: 25em !important;
+    height: 15em !important;
 }
 
 .lost-image {
     background-image: url("./Images/PublicImages/image-3.jpg");
-    height: 25em !important;
-    width: "720"
+    height: 17em !important;
+    width: 17em
 }
 
 .homepage-carousel-title {
