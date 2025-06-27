@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import BookModel from "../../Models/Book";
-export const SearchField = () => {
+export const SearchField = (props:{findBookByTitle:any,findBookByCategory:any}) => {
+  const[inputVal,setInputVal]=useState<string>("");
+  const[categorySelection,setCategorySelection]=useState<string>("Book Category");
   return (
     <div className=" row mt-5">
       <div className="col-6">
@@ -10,8 +12,9 @@ export const SearchField = () => {
             placeholder="Search"
             className=" form-control me-2"
             aria-label="Search"
+            onChange={(e)=>setInputVal(e.target.value)}
           />
-          <button className="btn  btn-outline-success">search</button>
+          <button className="btn  btn-outline-success" onClick={()=>props.findBookByTitle(inputVal)}>search</button>
         </div>
       </div>
       <div className="col-4">
@@ -22,27 +25,32 @@ export const SearchField = () => {
             id="selectCategoryButtuon1"
             type="button"
           >
-            Book category
+            {categorySelection}
           </button>
           <ul className="dropdown-menu">
-            <li>
+            <li onClick={()=>{setCategorySelection("ALL");props.findBookByCategory("All")}}>
               <a href="#" className="dropdown-item">
-                1
+                All
               </a>
             </li>
-            <li>
+            <li onClick={()=>{setCategorySelection("Front End");props.findBookByCategory("FE")}}>
               <a href="#" className="dropdown-item">
-                2
+                Front End
               </a>
             </li>
-            <li>
+            <li onClick={()=>{setCategorySelection("Back End");props.findBookByCategory("BE")}}>
               <a href="#" className="dropdown-item">
-                3
+                Back End
               </a>
             </li>
-            <li>
+            <li onClick={()=>{setCategorySelection("Data");props.findBookByCategory("Data")}}>
               <a href="#" className="dropdown-item">
-                4
+                Data
+              </a>
+            </li>
+            <li onClick={()=>{setCategorySelection("DevOps");props.findBookByCategory("DevOps")}}>
+              <a href="#" className="dropdown-item">
+                DevOps
               </a>
             </li>
           </ul>

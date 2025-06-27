@@ -1,6 +1,11 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 
+import { Navigate, NavLink, useNavigate } from "react-router-dom";
+
 export const Navbar = () => {
+
+  const navigate=useNavigate();
+
   return (
     <nav className="navbar navbar-dark main-color py-2">
       <div className="container-fluid">
@@ -19,14 +24,14 @@ export const Navbar = () => {
         <div className="collapse navbar-collapse" id="navbarNavDropdown">
           <ul className="navbar-nav">
             <li className="nav-item">
-              <a className="nav-link" href="#">
+              <NavLink className="nav-link" to={'/home'} >
                 Home
-              </a>
+              </NavLink>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#">
+              <NavLink className="nav-link" to='/search'>
                 Search Book
-              </a>
+              </NavLink>
             </li>
           </ul>
           <ul className="navbar-nav ms-auto">

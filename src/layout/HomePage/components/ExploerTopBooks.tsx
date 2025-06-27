@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export function ExploerTopBooks() {
   return (
     <header className="header bg-dark p-5 mb-4">
@@ -5,9 +7,9 @@ export function ExploerTopBooks() {
         <div>
           <h1 className="fw-bold display-5">Find your next advenure</h1>
           <div className="fs-4 col-md-8">where wolud you like go next</div>
-          <a className="btn main-color text-light btn-sm" href="#">
+          <Link className="btn main-color text-light btn-sm" to={"/search"}>
             Exploer top books
-          </a>
+          </Link>
         </div>
       </div>
     </header>
