@@ -1,5 +1,6 @@
 import React from "react";
 import BookModel from "../../Models/Book";
+import { Link } from "react-router-dom";
 
 export const SearchBooks = (props: { book: BookModel }) => {
   return (
@@ -54,9 +55,9 @@ export const SearchBooks = (props: { book: BookModel }) => {
          */}
 
         <div className="col-md-3 d-flex justify-content-center align-items-center">
-          <a href="#" className="btn btn-md main-color text-white">
+          <Link to={`/checkout/${props.book.id}`} className="btn btn-md main-color text-white">
             view Details
-          </a>
+          </Link>
         </div>
       </div>
     </div>
