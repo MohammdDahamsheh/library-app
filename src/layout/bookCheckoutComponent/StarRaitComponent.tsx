@@ -1,4 +1,4 @@
-export const StarRait = (props: { rait: number; size: number }) => {
+export const StarRait = (props: { rait: number,size: number }) => {
   const stars = [];
   for (let i = 0; i < Math.floor(props.rait); i++) {
     stars.push(
@@ -51,6 +51,7 @@ export const StarRait = (props: { rait: number; size: number }) => {
        */}
       {Array.from({ length: Math.floor(props.rait) }, (_, i) => (
         <svg
+        key={i}
           xmlns="http://www.w3.org/2000/svg"
           width={props.size}
           height={props.size}
@@ -66,6 +67,7 @@ export const StarRait = (props: { rait: number; size: number }) => {
         { length: Math.ceil(props.rait) - Math.floor(props.rait) },
         (_, i) => (
           <svg
+          key={i}
             xmlns="http://www.w3.org/2000/svg"
             width={props.size}
             height={props.size}
@@ -81,6 +83,7 @@ export const StarRait = (props: { rait: number; size: number }) => {
 
       {Array.from({ length: 5 - Math.ceil(props.rait) }, (_, i) => (
         <svg
+        key={i}
           xmlns="http://www.w3.org/2000/svg"
           width={props.size}
           height={props.size}

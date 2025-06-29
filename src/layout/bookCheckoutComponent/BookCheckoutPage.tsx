@@ -5,12 +5,63 @@ import { Spinner } from "../HomePage/components/spinner";
 import img from "../../Images/BooksImages/book-luv2code-1000.png";
 import { StarRait } from "./StarRaitComponent";
 import { BookCheckoutComponent } from "./checkoutComponent";
+import Review from "../../Models/Review";
+import { ReviewSection } from "./ReviewSection";
 export const BookCheckoutPage = () => {
+  //Book state
   const [book, setBook] = useState<BookModel>();
   const [isLoading, setIsLoading] = useState(true);
   const [httpError, setHttpError] = useState(null);
   const bookId = window.location.pathname.split("/")[2];
 
+  //Review State:
+  const [review, setReview] = useState<Review[]>([]);
+  const [isLoadingReview, setIsLoadingReview] = useState(true);
+  const [totalStar, setTotalStar] = useState<number>(0);
+
+  //featch the review from the backend
+  useEffect(() => {
+    const feachReview = async () => {
+      const URL = `http://localhost:8080/api/review/${bookId}`;
+      const response = await axios.get(URL);
+      // console.log(response);
+      if (response.status !== 200) {
+        throw new Error();
+      }
+      console.log(response);
+      
+      const responseData = await response.data;
+      const reviewData: Review[] = [];
+      let countOfRating: number = 0;
+      console.log(responseData);
+
+      for (let key in responseData) {
+        reviewData.push({
+          id: responseData[key].id,
+          userEmail: responseData[key].userEmail,
+          date: responseData[key].date,
+          rating: responseData[key].rating,
+          bookId: responseData[key].bookId,
+          reviewDescription: responseData[key].reviewDescription,
+        });
+        countOfRating = countOfRating + responseData[key].rating;
+      }
+
+      setReview(() => reviewData);
+      setIsLoadingReview(false);
+      if (countOfRating) {
+        const rait = (
+          Math.round((countOfRating / reviewData.length) * 2) / 2
+        ).toFixed(1);
+        setTotalStar(Number(rait));
+      }
+    };
+    feachReview().catch((error) => {
+      setHttpError(() => error.message);
+      setIsLoadingReview(false);
+    });
+  }, [bookId]);
+  //featch the Book form the backend :
   useEffect(() => {
     const feachBook = async () => {
       const url: string = `http://localhost:8080/api/books/${bookId}`;
@@ -38,7 +89,7 @@ export const BookCheckoutPage = () => {
       setIsLoading(false);
     });
   }, [bookId]);
-  if (isLoading) {
+  if (isLoading || isLoadingReview) {
     return (
       // < div className="container mt-5">
       //   Loading...
@@ -70,13 +121,15 @@ export const BookCheckoutPage = () => {
                 {book?.decription}
               </p>
 
-              <StarRait rait={2.5} size={32} />
+              <StarRait rait={totalStar} size={32} />
             </div>
           </div>
 
           <BookCheckoutComponent book={book} mobile={false} />
         </div>
         <hr />
+        <ReviewSection review={review} mobile={false}/>
+
       </div>
       {/* MOBILE */}
       <div className="container d-lg-none mt-5">
@@ -98,8 +151,10 @@ export const BookCheckoutPage = () => {
             </p>
           </div>
         </div>
-        <StarRait rait={4.5} size={32} />
+        <StarRait rait={totalStar} size={32} />
         <BookCheckoutComponent book={book} mobile={true} />
+        <hr />
+        <ReviewSection review={review} mobile={true}/>
       </div>
     </div>
   );

@@ -5,7 +5,7 @@ import BookModel from "../../Models/Book";
 import { Spinner } from "../HomePage/components/spinner";
 import { SearchField } from "./SearchFiledComp";
 import { Pagenation } from "./Pageation";
-import { log } from "console";
+import { Link } from "react-router-dom";
 export const SearchBooksPage = () => {
   const BaseURL: string = "http://localhost:8080/api/books";
   const [URL,setURL] =useState( `${BaseURL}`);
@@ -111,7 +111,7 @@ export const SearchBooksPage = () => {
           </>:
           <div className="mt-5">
             <h4>Can't find what you need</h4>
-            <a href="#" className="btn btn-primary text-white fw-bold px-3 btn-md mb-5">library service</a>
+            <Link to="/search" className="btn btn-primary text-white fw-bold px-3 btn-md mb-5">library service</Link>
           </div>
           }
           
