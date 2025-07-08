@@ -3,6 +3,7 @@ import { ReturnBook } from "./ReturnBook";
 import React, { useEffect, useState } from "react";
 import { Spinner } from "./spinner";
 import { Link } from "react-router-dom";
+import img from "./../../../Images/BooksImages/book-luv2code-1000.png";
 export const CarouselBook = () => {
   const [books, setBooks] = useState<BookModel[]>([]);
   const [isLoding, setIsloding] = useState(true);
@@ -51,7 +52,7 @@ export const CarouselBook = () => {
       //   Loading...
       // </div>
 
-      <Spinner/>
+      <Spinner />
     );
   }
   if (httpError) {
@@ -65,30 +66,25 @@ export const CarouselBook = () => {
       <div
         id="carouselExampleControls"
         className="carousel carousel-dark slide mt-5 
-                 d-lg-block"
+                 "
         data-bs-interval="false"
       >
         {/* Desktop */}
-        <div className="carousel-inner ">
-          <div className="carousel-item active px-3">
-            <div className="row d-flex justify-content-center align-items-center">
-              {/* <ReturnBook />
-              <ReturnBook />
-              <ReturnBook /> */}
-              {/* 
+        <div className="  carousel-inner ">
+          <div className=" carousel-item active ">
+            <div className="row px-5">
+             
               
-              To itrate over the first 3 element in the array 
-              */}
+              {/* To itrate over the first 3 element in the array  */}
+              
               {books.slice(0, 3).map((ele) => (
                 <ReturnBook book={ele} key={ele.id} />
               ))}
             </div>
           </div>
           <div className="carousel-item">
-            <div className="row d-flex justify-content-center align-items-center">
-              {/* <ReturnBook />
-              <ReturnBook />
-              <ReturnBook /> */}
+            <div className="row px-5">
+
 
               {books.slice(3, 6).map((ele) => (
                 <ReturnBook book={ele} key={ele.id} />
@@ -96,10 +92,8 @@ export const CarouselBook = () => {
             </div>
           </div>
           <div className="carousel-item">
-            <div className="row d-flex justify-content-center align-items-center">
-              {/* <ReturnBook />
-              <ReturnBook />
-              <ReturnBook /> */}
+            <div className="row px-5">
+              
 
               {books.slice(6, 9).map((ele) => (
                 <ReturnBook book={ele} key={ele.id} />
@@ -134,20 +128,15 @@ export const CarouselBook = () => {
       </div>
 
       {/* Mobile */}
-      <div className="d-md-none mt-3">
-        <div className="row d-flex justify-content-center align-items-center">
-          <div className="text-center">
-            <img
-              src={"./../../../Images/BooksImages/book-luv2code-1000.png"}
-              width="151"
-              height="233"
-              alt="book"
-            />
+      <div className="d-none mt-3">
+        <div className=" row">
+          <div className="text-center carousel-item active ">
+            <img src={img} width="151" height="233" alt="book" />
             <h6 className="mt-2">Book</h6>
             <p>Luv2Code</p>
-            <a className="btn main-color text-white" href="#">
+            <Link className="btn main-color text-white" to="/checkout">
               Reserve
-            </a>
+            </Link>
           </div>
         </div>
       </div>

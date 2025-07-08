@@ -8,6 +8,8 @@ import { BookCheckoutComponent } from "./checkoutComponent";
 import Review from "../../Models/Review";
 import { ReviewSection } from "./ReviewSection";
 export const BookCheckoutPage = () => {
+  // const { isAuthenticated, getAccessTokenSilently } = useAuth0();
+
   //Book state
   const [book, setBook] = useState<BookModel>();
   const [isLoading, setIsLoading] = useState(true);
@@ -29,7 +31,7 @@ export const BookCheckoutPage = () => {
         throw new Error();
       }
       console.log(response);
-      
+
       const responseData = await response.data;
       const reviewData: Review[] = [];
       let countOfRating: number = 0;
@@ -128,8 +130,7 @@ export const BookCheckoutPage = () => {
           <BookCheckoutComponent book={book} mobile={false} />
         </div>
         <hr />
-        <ReviewSection review={review} mobile={false}/>
-
+        <ReviewSection review={review} mobile={false} />
       </div>
       {/* MOBILE */}
       <div className="container d-lg-none mt-5">
@@ -154,7 +155,7 @@ export const BookCheckoutPage = () => {
         <StarRait rait={totalStar} size={32} />
         <BookCheckoutComponent book={book} mobile={true} />
         <hr />
-        <ReviewSection review={review} mobile={true}/>
+        <ReviewSection review={review} mobile={true} />
       </div>
     </div>
   );
