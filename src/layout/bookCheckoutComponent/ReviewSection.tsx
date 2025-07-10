@@ -12,7 +12,7 @@ export const ReviewSection = (props: { review: Review[]; mobile: boolean }) => {
         {props.review.length > 0 ? (
           <>
             {props.review.slice(0, 3).map((review) => (
-              <LastReview review={review} />
+              <LastReview review={review} key={1}/>
             ))}
             <Link
               to={"/#"}

@@ -7,6 +7,7 @@ import { StarRait } from "./StarRaitComponent";
 import { BookCheckoutComponent } from "./checkoutComponent";
 import Review from "../../Models/Review";
 import { ReviewSection } from "./ReviewSection";
+import { useAuth0 } from "@auth0/auth0-react";
 export const BookCheckoutPage = () => {
   // const { isAuthenticated, getAccessTokenSilently } = useAuth0();
 
@@ -21,6 +22,8 @@ export const BookCheckoutPage = () => {
   const [isLoadingReview, setIsLoadingReview] = useState(true);
   const [totalStar, setTotalStar] = useState<number>(0);
 
+  const{getIdTokenClaims}=useAuth0();
+
   //featch the review from the backend
   useEffect(() => {
     const feachReview = async () => {
@@ -30,7 +33,7 @@ export const BookCheckoutPage = () => {
       if (response.status !== 200) {
         throw new Error();
       }
-      console.log(response);
+      // console.log(response);
 
       const responseData = await response.data;
       const reviewData: Review[] = [];
@@ -90,7 +93,41 @@ export const BookCheckoutPage = () => {
       setHttpError(error.message);
       setIsLoading(false);
     });
-  }, [bookId]);
+  }, [bookId,book]);
+
+  const handleCheckoutButton = async () => {
+    //To get the object that have all info
+    const tokenId = await getIdTokenClaims();
+    // (tokenId?.__raw : is the token in the obgect info)
+    const token = tokenId?.__raw;
+    // console.log(token?.__raw);
+
+    //to make an requset with send the token
+    const response = await axios.put(
+      `http://localhost:8080/api/secure/checkout?bookId=${bookId}`,
+      {
+        /*Requst (put) body*/
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    
+
+    if (response.status !== 200) {
+      throw Error();
+    }
+
+    const responseData = await response.data;
+    // console.log(responseData);
+
+    setBook(responseData);
+
+  };
+  
   if (isLoading || isLoadingReview) {
     return (
       // < div className="container mt-5">
@@ -127,7 +164,7 @@ export const BookCheckoutPage = () => {
             </div>
           </div>
 
-          <BookCheckoutComponent book={book} mobile={false} />
+          <BookCheckoutComponent book={book} mobile={false} handleCheckoutBook={handleCheckoutButton} />
         </div>
         <hr />
         <ReviewSection review={review} mobile={false} />
@@ -153,7 +190,7 @@ export const BookCheckoutPage = () => {
           </div>
         </div>
         <StarRait rait={totalStar} size={32} />
-        <BookCheckoutComponent book={book} mobile={true} />
+        <BookCheckoutComponent book={book} mobile={true} handleCheckoutBook={handleCheckoutButton}/>
         <hr />
         <ReviewSection review={review} mobile={true} />
       </div>

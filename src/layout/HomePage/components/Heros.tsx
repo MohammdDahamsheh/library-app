@@ -17,7 +17,7 @@ export const Heros = () => {
               Whether it is to learn a new skill or grow withn one,we will be
               able to provide the top content for you !
             </p>
-            {isAuthenticated ? (
+            {!isAuthenticated ? (
               <Link to={"/login"} className="btn btn-md main-color text-white">
                 sgin up
               </Link>

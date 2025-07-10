@@ -1,11 +1,26 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 
 import { useAuth0 } from "@auth0/auth0-react";
+import { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 export const Navbar = () => {
   // const navigate = useNavigate();
-  const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
+  const { getIdTokenClaims, isAuthenticated, loginWithRedirect, logout } =
+    useAuth0();
 
+  useEffect(() => {
+    const featchToken = async () => {
+      try {
+        const tokinID = await getIdTokenClaims();
+        console.log(tokinID);
+        
+      } catch (error) {
+        console.log(error);
+        
+      }
+    };
+    featchToken();
+  });
   const handleLogout = () => {
     console.log("handleLogout");
     logout({ logoutParams: { returnTo: window.location.origin } });
@@ -66,5 +81,3 @@ export const Navbar = () => {
     </nav>
   );
 };
-
-

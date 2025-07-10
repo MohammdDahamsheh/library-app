@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 export const LibraryService = () => {
   const { isAuthenticated } = useAuth0();
 
+  
+
   return (
     <div className="container my-5">
       <div className="row p-2 align-items-center border shadow-lg">
@@ -15,13 +17,13 @@ export const LibraryService = () => {
           </p>
 
           <div className="d-grid gap-2 justify-content-start mb-4 mb-lg-3">
-            {isAuthenticated ? (
-              <Link to={"/search"} className="btn btn-md main-color text-white">
-                Search
-              </Link>
-            ) : (
+            {!isAuthenticated ? (
               <Link to={"/login"} className="btn btn-md main-color text-white">
                 sgin up
+              </Link>
+            ) : (
+              <Link to={"/search"} className="btn btn-md main-color text-white">
+                Search
               </Link>
             )}
           </div>
