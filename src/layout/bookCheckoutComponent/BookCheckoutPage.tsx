@@ -10,6 +10,7 @@ import { ReviewSection } from "./ReviewSection";
 import { useAuth0 } from "@auth0/auth0-react";
 export const BookCheckoutPage = () => {
   // const { isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const { isAuthenticated, getIdTokenClaims } = useAuth0();
 
   //Book state
   const [book, setBook] = useState<BookModel>();
@@ -21,10 +22,10 @@ export const BookCheckoutPage = () => {
   const [review, setReview] = useState<Review[]>([]);
   const [isLoadingReview, setIsLoadingReview] = useState(true);
   const [totalStar, setTotalStar] = useState<number>(0);
+  const [isLeftReview, setIsLeftReview] = useState(false);
+  const [isLoadingUserReview, setIsLoadingUserReview] = useState(true);
 
-  const{getIdTokenClaims}=useAuth0();
-
-  //featch the review from the backend
+  //featch the review for the book by book id from the backend
   useEffect(() => {
     const feachReview = async () => {
       const URL = `http://localhost:8080/api/review/${bookId}`;
@@ -65,7 +66,8 @@ export const BookCheckoutPage = () => {
       setHttpError(() => error.message);
       setIsLoadingReview(false);
     });
-  }, [bookId]);
+  }, [bookId, isLeftReview]);
+
   //featch the Book form the backend :
   useEffect(() => {
     const feachBook = async () => {
@@ -93,7 +95,7 @@ export const BookCheckoutPage = () => {
       setHttpError(error.message);
       setIsLoading(false);
     });
-  }, [bookId,book]);
+  }, [bookId, book]);
 
   const handleCheckoutButton = async () => {
     //To get the object that have all info
@@ -115,8 +117,6 @@ export const BookCheckoutPage = () => {
       }
     );
 
-    
-
     if (response.status !== 200) {
       throw Error();
     }
@@ -125,10 +125,38 @@ export const BookCheckoutPage = () => {
     // console.log(responseData);
 
     setBook(responseData);
-
   };
-  
-  if (isLoading || isLoadingReview) {
+
+  useEffect(() => {
+    const fetchReview = async () => {
+      if (isAuthenticated) {
+        const url = `http://localhost:8080/api/secure/checkReviewTheBookByUser?bookId=${bookId}`;
+        const getToken = await getIdTokenClaims();
+        const token = getToken?.__raw;
+
+        const response = await axios.get(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.status !== 200) {
+          throw Error("There is some wronge....");
+        }
+        const responseData = await response.data;
+        // console.log(`******* ${responseData}`);
+
+        setIsLeftReview(responseData);
+      }
+      setIsLoadingUserReview(false);
+    };
+    fetchReview().catch((err: any) => {
+      setIsLoadingUserReview(false);
+      setHttpError(err.message);
+    });
+  }, [bookId, getIdTokenClaims, isAuthenticated]);
+
+  if (isLoading || isLoadingReview || isLoadingUserReview) {
     return (
       // < div className="container mt-5">
       //   Loading...
@@ -164,10 +192,16 @@ export const BookCheckoutPage = () => {
             </div>
           </div>
 
-          <BookCheckoutComponent book={book} mobile={false} handleCheckoutBook={handleCheckoutButton} />
+          <BookCheckoutComponent
+            book={book}
+            mobile={false}
+            handleCheckoutBook={handleCheckoutButton}
+            isLeftReview={isLeftReview}
+            onReview={() => setIsLeftReview(true)}
+          />
         </div>
         <hr />
-        <ReviewSection review={review} mobile={false} />
+        <ReviewSection review={review} mobile={false} bookId={Number(bookId)} />
       </div>
       {/* MOBILE */}
       <div className="container d-lg-none mt-5">
@@ -190,9 +224,15 @@ export const BookCheckoutPage = () => {
           </div>
         </div>
         <StarRait rait={totalStar} size={32} />
-        <BookCheckoutComponent book={book} mobile={true} handleCheckoutBook={handleCheckoutButton}/>
+        <BookCheckoutComponent
+          book={book}
+          mobile={true}
+          handleCheckoutBook={handleCheckoutButton}
+          isLeftReview={isLeftReview}
+          onReview={() => setIsLeftReview(true)}
+        />
         <hr />
-        <ReviewSection review={review} mobile={true} />
+        <ReviewSection review={review} mobile={true} bookId={Number(bookId)} />
       </div>
     </div>
   );

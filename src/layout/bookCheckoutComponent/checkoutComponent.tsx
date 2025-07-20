@@ -1,19 +1,31 @@
 import { Link } from "react-router-dom";
 import BookModel from "../../Models/Book";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import axios from "axios";
 import { Spinner } from "../HomePage/components/spinner";
+import { StarRait } from "./StarRaitComponent";
+import ReviewTheBook from "../../Models/ReviewTheBook";
 
 export const BookCheckoutComponent = (props: {
   book: BookModel | undefined;
   mobile: boolean;
   handleCheckoutBook: any;
+  isLeftReview: boolean;
+  onReview: any;
 }) => {
   const [numOfCheckout, setNumOfCheckout] = useState<number>(5);
   const [isLoading, setIsloading] = useState<boolean>(false);
   const [isCheckoutLoading, setIsCheckoutLoading] = useState<boolean>(false);
   const [httpError, setHttpError] = useState("");
+
+  //put the descreption of the book
+  const [description, setDescription] = useState<string>("");
+  //put the rating of the book
+  const [rating, setRating] = useState(0);
+  //to knew if the user put a rate or not
+  const [putRating, setPutRating] = useState(false);
+
   const {
     isAuthenticated,
     getIdTokenClaims,
@@ -84,10 +96,10 @@ export const BookCheckoutComponent = (props: {
       const responseForCheckTheCheckoutStatusData =
         await responseForCheckTheCheckoutStatus.data;
 
-      console.log(
-        "responseForCheckTheCheckoutStatus : " +
-          responseForCheckTheCheckoutStatusData
-      );
+      // console.log(
+      //   "responseForCheckTheCheckoutStatus : " +
+      //     responseForCheckTheCheckoutStatusData
+      // );
 
       setIsCheckoutLoading(false);
       setCheckout(responseForCheckTheCheckoutStatusData);
@@ -100,8 +112,10 @@ export const BookCheckoutComponent = (props: {
 
   function renderButton() {
     if (isAuthenticated) {
-      if (checkout) return <p className="text-primary">The book is checkout , enjoy</p>;
-      else if (numOfCheckout >= 5) return <p className="text-danger">Too many books checked out </p>;
+      if (checkout)
+        return <p className="text-primary">The book is checkout , enjoy</p>;
+      else if (numOfCheckout >= 5)
+        return <p className="text-danger">Too many books checked out </p>;
       else
         return (
           <button
@@ -119,7 +133,80 @@ export const BookCheckoutComponent = (props: {
       );
     }
   }
-  if (isCheckoutLoading || isAuthLoading) {
+
+  //To handle the sign in steatment line
+  function renderSign() {
+    const optoin = [];
+    for (let i = 0; i <= 5; i += 0.5) {
+      optoin.push(i);
+    }
+    if (isAuthenticated && props.isLeftReview)
+      return <p>Thank you for your reviewing </p>;
+    else if (isAuthenticated && !props.isLeftReview) {
+      return (
+        <div className="dropdown">
+          <span
+            className=" dropdown-toggle bg-white fs-5 fw-semibold cursor-pointer"
+            style={{ cursor: "pointer" }}
+            data-bs-toggle="dropdown"
+            aria-expanded={"false"}
+          >
+            Leave review
+          </span>
+          <ul className="dropdown-menu">
+          
+            {optoin.map((optoin, i) => (
+              <li
+                className="dropdown-item"
+                key={i}
+                onClick={() => {
+                  setRating(optoin);
+                  setPutRating(true);
+                }}
+              >
+                {optoin}
+              </li>
+            ))}
+          </ul>
+          <StarRait rait={rating} size={32} />
+        </div>
+      );
+    } else
+      return (
+        <div>
+          <p>Sign in to br able to leave a review</p>
+        </div>
+      );
+  }
+
+  const handleSubmitReviewBtn = async () => {
+    const url = `http://localhost:8080/api/secure/giveReview`;
+    const getToken = await getIdTokenClaims();
+    const token = await getToken?.__raw;
+    const review: ReviewTheBook = new ReviewTheBook(
+      props.book!.id,
+      rating,
+      description
+    );
+    console.log(review);
+
+    const response = await axios.post(
+      url,
+
+      review,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    if (response.status !== 200) {
+      throw Error();
+    }
+    const responseData = await response.data;
+    console.log(`Response of the review Request ${responseData}`);
+    setPutRating(false);
+    props.onReview();
+  };
+
+  if (isCheckoutLoading || isLoading) {
     return <Spinner />;
   }
   if (httpError) {
@@ -149,7 +236,25 @@ export const BookCheckoutComponent = (props: {
         <p className="mt-3">
           This number can change until palcing order has been complete.
         </p>
-        {!isAuthenticated && <p>Sign in to br able to leave a review</p>}
+        {renderSign()}
+
+        {putRating && (
+          <div className="d-flex flex-column gap-3">
+            <hr />
+            description
+            <textarea
+              placeholder="Decription"
+              rows={5}
+              onChange={(e) => {
+                setDescription(e.target.value);
+                console.log(description);
+              }}
+            ></textarea>
+            <button className="btn btn-primary" onClick={handleSubmitReviewBtn}>
+              Submit Review
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

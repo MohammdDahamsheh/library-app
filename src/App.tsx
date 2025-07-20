@@ -11,6 +11,7 @@ import { auth0Config } from "./lip/Auth0Config";
 import { Auth0Provider } from "@auth0/auth0-react";
 import LoginPage from "./Auth/LoginPage";
 import { LoginCallback } from "./Auth/LoginCallback";
+import { ShowAllReviews } from "./layout/bookCheckoutComponent/ShowAllReviews";
 
 const Auth0ProviderWithHistory = ({
   children,
@@ -54,6 +55,7 @@ function App() {
             <Route path="/search" element={<SearchBooksPage />} />
             <Route path="/checkout/:bookId" element={<BookCheckoutPage />} />
             <Route path="/callback" element={<LoginCallback />} />
+            <Route path="/reachAllReviews/:bookId" element={<ShowAllReviews/>} />
 
             <Route path="/login" element={<LoginPage />} />
           </Routes>
