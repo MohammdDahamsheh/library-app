@@ -13,10 +13,8 @@ export const Navbar = () => {
       try {
         const tokinID = await getIdTokenClaims();
         console.log(tokinID);
-        
       } catch (error) {
         console.log(error);
-        
       }
     };
     featchToken();
@@ -59,6 +57,11 @@ export const Navbar = () => {
                 Search Book
               </NavLink>
             </li>
+            {isAuthenticated&&<li className="nav-item">
+              <NavLink className="nav-link" to="/shelf">
+                Shelf
+              </NavLink>
+            </li>}
           </ul>
           <ul className="navbar-nav ms-auto">
             <li className="nav-item m-1">

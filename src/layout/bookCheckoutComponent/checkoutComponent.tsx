@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import BookModel from "../../Models/Book";
 import { useAuth0 } from "@auth0/auth0-react";
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { Spinner } from "../HomePage/components/spinner";
 import { StarRait } from "./StarRaitComponent";
@@ -154,7 +154,6 @@ export const BookCheckoutComponent = (props: {
             Leave review
           </span>
           <ul className="dropdown-menu">
-          
             {optoin.map((optoin, i) => (
               <li
                 className="dropdown-item"

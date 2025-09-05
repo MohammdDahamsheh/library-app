@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React from "react";
+import React, { JSX } from "react";
 import "./App.css";
 import { Navbar } from "./layout/navbarAndFooter/Navbar";
 import { Footer } from "./layout/navbarAndFooter/footer";
@@ -8,10 +8,22 @@ import { SearchBooksPage } from "./layout/searchBooksComponent/SearchBooksPage";
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import { BookCheckoutPage } from "./layout/bookCheckoutComponent/BookCheckoutPage";
 import { auth0Config } from "./lip/Auth0Config";
-import { Auth0Provider } from "@auth0/auth0-react";
+import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
 import LoginPage from "./Auth/LoginPage";
 import { LoginCallback } from "./Auth/LoginCallback";
 import { ShowAllReviews } from "./layout/bookCheckoutComponent/ShowAllReviews";
+import { ShelfPage } from "./layout/shelfPage/ShelfPage";
+import { Spinner } from "./layout/HomePage/components/spinner";
+
+
+ const SecureRoute = ({ children }: { children: JSX.Element }) => {
+    const { isAuthenticated, isLoading } = useAuth0();
+    if (isLoading) return <Spinner />;
+    if (isAuthenticated) return children;
+    else {
+      return <Navigate to="/login" />;
+    }
+  };
 
 const Auth0ProviderWithHistory = ({
   children,
@@ -24,6 +36,7 @@ const Auth0ProviderWithHistory = ({
     navigate(appState?.returnTo || "/home");
   };
 
+ 
   return (
     <Auth0Provider
       domain={auth0Config.issuer}
@@ -55,7 +68,18 @@ function App() {
             <Route path="/search" element={<SearchBooksPage />} />
             <Route path="/checkout/:bookId" element={<BookCheckoutPage />} />
             <Route path="/callback" element={<LoginCallback />} />
-            <Route path="/reachAllReviews/:bookId" element={<ShowAllReviews/>} />
+            <Route
+              path="/shelf"
+              element={
+                <SecureRoute>
+                  <ShelfPage />
+                </SecureRoute>
+              }
+            />
+            <Route
+              path="/reachAllReviews/:bookId"
+              element={<ShowAllReviews />}
+            />
 
             <Route path="/login" element={<LoginPage />} />
           </Routes>

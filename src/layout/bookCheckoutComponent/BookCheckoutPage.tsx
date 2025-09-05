@@ -34,7 +34,7 @@ export const BookCheckoutPage = () => {
       if (response.status !== 200) {
         throw new Error();
       }
-      // console.log(response);
+      console.log(response);
 
       const responseData = await response.data;
       const reviewData: Review[] = [];
