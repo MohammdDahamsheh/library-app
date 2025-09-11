@@ -14,16 +14,16 @@ import { LoginCallback } from "./Auth/LoginCallback";
 import { ShowAllReviews } from "./layout/bookCheckoutComponent/ShowAllReviews";
 import { ShelfPage } from "./layout/shelfPage/ShelfPage";
 import { Spinner } from "./layout/HomePage/components/spinner";
+import { LibraryServicePage } from "./layout/libraryServices/LibraryServicePage";
 
-
- const SecureRoute = ({ children }: { children: JSX.Element }) => {
-    const { isAuthenticated, isLoading } = useAuth0();
-    if (isLoading) return <Spinner />;
-    if (isAuthenticated) return children;
-    else {
-      return <Navigate to="/login" />;
-    }
-  };
+const SecureRoute = ({ children }: { children: JSX.Element }) => {
+  const { isAuthenticated, isLoading } = useAuth0();
+  if (isLoading) return <Spinner />;
+  if (isAuthenticated) return children;
+  else {
+    return <Navigate to="/login" />;
+  }
+};
 
 const Auth0ProviderWithHistory = ({
   children,
@@ -36,7 +36,6 @@ const Auth0ProviderWithHistory = ({
     navigate(appState?.returnTo || "/home");
   };
 
- 
   return (
     <Auth0Provider
       domain={auth0Config.issuer}
@@ -79,6 +78,14 @@ function App() {
             <Route
               path="/reachAllReviews/:bookId"
               element={<ShowAllReviews />}
+            />
+            <Route
+              path="/libraryServicePage"
+              element={
+                <SecureRoute>
+                  <LibraryServicePage />
+                </SecureRoute>
+              }
             />
 
             <Route path="/login" element={<LoginPage />} />

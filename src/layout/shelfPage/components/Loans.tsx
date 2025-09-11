@@ -4,6 +4,7 @@ import ShelfCurrentLoans from "../../../Models/ShelfCurrentLoans";
 import { Spinner } from "../../HomePage/components/spinner";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { LoansModal } from "./LoansModal";
 
 export const Loans = () => {
   const { isAuthenticated, getIdTokenClaims } = useAuth0();
@@ -12,6 +13,7 @@ export const Loans = () => {
     ShelfCurrentLoans[]
   >([]);
   const [isLoansLoading, setIsLoansLoading] = useState(true);
+  const [checkout, setCheckout] = useState(false);
 
   useEffect(() => {
     const featchLoans = async () => {
@@ -44,12 +46,56 @@ export const Loans = () => {
       setHttpError(error.message);
     });
     window.scrollTo(0, 0);
-  }, [getIdTokenClaims, isAuthenticated]);
+  }, [getIdTokenClaims, isAuthenticated, checkout]);
 
   if (isLoansLoading) {
     return <Spinner />;
   }
   if (httpError) return <div className="container m-5">{httpError}</div>;
+
+  //  to handle the return book button
+  async function returnBook(bookId: number) {
+    const tokenId = await getIdTokenClaims();
+    const token = tokenId?.__raw;
+
+    const response = await axios.put(
+      `http://localhost:8080/api/secure/returnBook?bookId=${bookId}`,
+      null,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (response.status !== 200) throw Error();
+
+    const responseData = await response.data;
+    console.log("return book data : " + responseData);
+
+    setCheckout(!checkout);
+  }
+
+  async function renewBook(bookId: number) {
+    const tokenId = await getIdTokenClaims();
+    const token = tokenId?.__raw;
+
+    const response = await axios.put(
+      `http://localhost:8080/api/secure/renewBook?bookId=${bookId}`,
+      null,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (response.status !== 200) throw Error();
+
+    const responseData = await response.data;
+
+    setCheckout(!checkout);
+  }
 
   return (
     <div>
@@ -126,13 +172,20 @@ export const Loans = () => {
                     </div>
                   </div>
                 </div>
+                <hr />
+                <LoansModal
+                  mobile={false}
+                  shelfCurrentLoans={shelfCurrentLoan}
+                  returnBook={returnBook}
+                  renewBook={renewBook}
+                />
               </div>
             ))}
           </>
         ) : (
           <>
             <h3>currently no loans </h3>
-            <Link className="btn btn-primary" to={`search`}>
+            <Link className="btn btn-primary" to={`/search`}>
               search new books
             </Link>
           </>
@@ -148,69 +201,76 @@ export const Loans = () => {
 
             {shelfCurrentLoans.map((shelfCurrentLoan, index) => (
               <div key={shelfCurrentLoan.book?.id ?? index}>
-                  <div className="d-flex justify-content-center algin-item-center">
-                    {shelfCurrentLoan.book?.img ? (
-                      <img
-                        src={shelfCurrentLoan.book.img}
-                        width={226}
-                        height={349}
-                        alt=""
-                      />
-                    ) : (
-                      <img src={"#"} alt="none" />
-                    )}
-                  </div>
+                <div className="d-flex justify-content-center algin-item-center">
+                  {shelfCurrentLoan.book?.img ? (
+                    <img
+                      src={shelfCurrentLoan.book.img}
+                      width={226}
+                      height={349}
+                      alt=""
+                    />
+                  ) : (
+                    <img src={"#"} alt="none" />
+                  )}
+                </div>
 
-                  <div className="card  d-flex mt-5 mb-3">
-                    <div className="card-body">
-                      <div className="mt-3">
-                        <h4>Loan options :</h4>
-                        {shelfCurrentLoan.daysLeft > 0 && (
-                          <p className="text-secondary">
-                            due in {shelfCurrentLoan.daysLeft} days
-                          </p>
-                        )}
-                        {shelfCurrentLoan.daysLeft === 0 && (
-                          <p className="text-success">Due today</p>
-                        )}
-                        {shelfCurrentLoan.daysLeft < 0 && (
-                          <p className="text-danger">
-                            past due in {shelfCurrentLoan.daysLeft} days
-                          </p>
-                        )}
+                <div className="card  d-flex mt-5 mb-3">
+                  <div className="card-body">
+                    <div className="mt-3">
+                      <h4>Loan options :</h4>
+                      {shelfCurrentLoan.daysLeft > 0 && (
+                        <p className="text-secondary">
+                          due in {shelfCurrentLoan.daysLeft} days
+                        </p>
+                      )}
+                      {shelfCurrentLoan.daysLeft === 0 && (
+                        <p className="text-success">Due today</p>
+                      )}
+                      {shelfCurrentLoan.daysLeft < 0 && (
+                        <p className="text-danger">
+                          past due in {shelfCurrentLoan.daysLeft} days
+                        </p>
+                      )}
 
-                        <div className="list-group mt-3">
-                          <button
-                            className="list-group-item list-group-item-action"
-                            aria-current="true"
-                            data-bs-toggle="modal"
-                            data-bs-target={`#mobilemodal${
-                              shelfCurrentLoan.book?.id ?? index
-                            }`}
-                          >
-                            Manage Loan
-                          </button>
-                          <Link
-                            to="/search"
-                            className="list-group-item list-group-item-action"
-                          >
-                            Search more books?
-                          </Link>
-                        </div>
+                      <div className="list-group mt-3">
+                        <button
+                          className="list-group-item list-group-item-action"
+                          aria-current="true"
+                          data-bs-toggle="modal"
+                          data-bs-target={`#mobilemodal${
+                            shelfCurrentLoan.book?.id ?? index
+                          }`}
+                        >
+                          Manage Loan
+                        </button>
+                        <Link
+                          to="/search"
+                          className="list-group-item list-group-item-action"
+                        >
+                          Search more books?
+                        </Link>
                       </div>
-                      <hr />
-                      <p className="mt-3 ">
-                        Help other to find thier adventure by reviewing your
-                        loan .
-                      </p>
-                      <Link
-                        className="btn btn-primary"
-                        to={`/checkout/${shelfCurrentLoan.book?.id}`}
-                      >
-                        leave a review
-                      </Link>
                     </div>
+                    <hr />
+                    <p className="mt-3 ">
+                      Help other to find thier adventure by reviewing your loan
+                      .
+                    </p>
+                    <Link
+                      className="btn btn-primary"
+                      to={`/checkout/${shelfCurrentLoan.book?.id}`}
+                    >
+                      leave a review
+                    </Link>
                   </div>
+                </div>
+                <hr />
+                <LoansModal
+                  mobile={true}
+                  shelfCurrentLoans={shelfCurrentLoan}
+                  returnBook={returnBook}
+                  renewBook={renewBook}
+                />
               </div>
             ))}
           </>

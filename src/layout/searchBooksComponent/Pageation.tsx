@@ -27,6 +27,8 @@ export const Pagenation = (props: {
 
   return (
     <nav aria-label="">
+      {
+        
       <ul className="pagination">
         <li className="page-item" onClick={() => props.paginate(1)}>
           <button className="page-link">First Page</button>
@@ -51,6 +53,8 @@ export const Pagenation = (props: {
           </button>
         </li>
       </ul>
+      
+      }
     </nav>
   );
 };

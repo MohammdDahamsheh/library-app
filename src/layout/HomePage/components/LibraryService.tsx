@@ -22,8 +22,8 @@ export const LibraryService = () => {
                 sgin up
               </Link>
             ) : (
-              <Link to={"/search"} className="btn btn-md main-color text-white">
-                Search
+              <Link to={"/libraryServicePage"} className="btn btn-md main-color text-white">
+                Services
               </Link>
             )}
           </div>

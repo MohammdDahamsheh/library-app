@@ -63,7 +63,7 @@ export const SearchBooksPage = () => {
           copies: responseData[key].copies,
           copies_avilavle: responseData[key].copiesAvailable,
           category: responseData[key].category,
-          img: responseData[key].img,
+          img:responseData[key].img
         });
       }
       setBooks(loadBooks);
