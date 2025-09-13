@@ -15,6 +15,7 @@ import { ShowAllReviews } from "./layout/bookCheckoutComponent/ShowAllReviews";
 import { ShelfPage } from "./layout/shelfPage/ShelfPage";
 import { Spinner } from "./layout/HomePage/components/spinner";
 import { LibraryServicePage } from "./layout/libraryServices/LibraryServicePage";
+import { ManageLibraryPage } from "./layout/ManegeLibraryPage/ManageLibraryPage";
 
 const SecureRoute = ({ children }: { children: JSX.Element }) => {
   const { isAuthenticated, isLoading } = useAuth0();
@@ -75,6 +76,7 @@ function App() {
                 </SecureRoute>
               }
             />
+            
             <Route
               path="/reachAllReviews/:bookId"
               element={<ShowAllReviews />}
@@ -84,6 +86,15 @@ function App() {
               element={
                 <SecureRoute>
                   <LibraryServicePage />
+                </SecureRoute>
+              }
+            />
+
+            <Route
+              path="/admin"
+              element={
+                <SecureRoute>
+                  <ManageLibraryPage />
                 </SecureRoute>
               }
             />

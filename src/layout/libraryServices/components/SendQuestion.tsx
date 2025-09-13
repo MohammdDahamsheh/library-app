@@ -24,6 +24,7 @@ export const SendQuestion = () => {
       const message: Message = {
         title: title,
         question: question,
+        
       };
 
       const response = await axios.post(

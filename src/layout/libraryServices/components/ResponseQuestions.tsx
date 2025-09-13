@@ -85,7 +85,7 @@ export const ResponseQuestions = () => {
             </div>
           ))}
 
-          {totalPages > 0 && (
+          {totalPages > 1 && (
             <Pagenation
               totalPage={totalPages}
               paginate={paginate}
