@@ -114,6 +114,8 @@ export const SearchBooksPage = () => {
             <Link to="/search" className="btn btn-primary text-white fw-bold px-3 btn-md mb-5">library service</Link>
           </div>
           }
+
+          <br />
           
           {books.length >= 1 && (
             <Pagenation

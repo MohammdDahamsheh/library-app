@@ -4,14 +4,13 @@ class BookModel {
   id!: number;
   title?: string;
   author?: string;
-  decription?: string;
+  decription!: string;
   copies?: number;
   copies_avilavle?: number;
   category?: string;
   img?: string;
 
   constructor(
-    id: number,
     title: string,
     author: string,
     decription: string,
@@ -20,7 +19,6 @@ class BookModel {
     category: string,
     img: string
   ) {
-    this.id = id;
     this.title = title;
     this.author = author;
     this.decription = decription;

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { Spinner } from "../HomePage/components/spinner";
 import { Messeges } from "./components/Messges";
+import { AddItem } from "./components/AddItem";
 
 export const ManageLibraryPage = () => {
   const { isAuthenticated, getIdTokenClaims } = useAuth0();
@@ -98,7 +99,8 @@ export const ManageLibraryPage = () => {
             role="tabpanel"
             aria-labelledby="nav-addNewItems-tab"
           >
-            <p>Add new Items</p>
+            {/* <p>Add new Items</p> */}
+            <AddItem/>
           </div>
 
           <div

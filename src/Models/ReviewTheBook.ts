@@ -2,7 +2,7 @@
 
 class ReviewTheBook{
 
-     bookId:number;
+     bookId?:number;
      rating :number;
      description?:string;
 

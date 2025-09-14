@@ -1,5 +1,5 @@
 class Review {
-  id!: number;
+  id?: number;
   userEmail: string;
   date: string;
   rating: number;
