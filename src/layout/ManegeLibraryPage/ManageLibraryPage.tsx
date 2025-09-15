@@ -4,6 +4,7 @@ import { Navigate } from "react-router-dom";
 import { Spinner } from "../HomePage/components/spinner";
 import { Messeges } from "./components/Messges";
 import { AddItem } from "./components/AddItem";
+import { ChangeQuntity } from "./components/ChangeQuntity";
 
 export const ManageLibraryPage = () => {
   const { isAuthenticated, getIdTokenClaims } = useAuth0();
@@ -109,7 +110,10 @@ export const ManageLibraryPage = () => {
             role="tabpanel"
             aria-labelledby="nav-changeQuntity-tab"
           >
-            <p>change Quntity</p>
+            {/* <p>change Quntity</p> */}
+            {
+              changeQuntityBtn&&<ChangeQuntity/>
+            }
           </div>
 
           <div

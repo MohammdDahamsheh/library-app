@@ -1,4 +1,4 @@
-class BookModelCreate {
+class BookForUpdate {
   id!: number;
   title!: string;
   author!: string;
@@ -8,7 +8,10 @@ class BookModelCreate {
   category!: string;
   img!: string;
 
+  
+
   constructor(
+    id:number,
     title: string,
     author: string,
     description: string,
@@ -17,6 +20,7 @@ class BookModelCreate {
     category: string,
     img: string
   ) {
+    this.id=id;
     this.title = title;
     this.author = author;
     this.description = description;
@@ -25,8 +29,5 @@ class BookModelCreate {
     this.category = category;
     this.img = img;
   }
-
-
-  
 }
-export default BookModelCreate;
+export default BookForUpdate;
